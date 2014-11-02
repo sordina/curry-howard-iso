@@ -84,3 +84,20 @@ demorgan_2b f = f . L /\ f . R
 
 demorgan2 : Not a :/\ Not b :<-> Not (a :\/ b)
 demorgan2 = demorgan_2a <-> demorgan_2b
+
+data Scottish    = VScottish
+data RedSocks    = VRedSocks
+data WearKilt    = VWearKilt
+data Married     = VMarried
+data GoOutSunday = VGoOutSunday
+
+no_true_scottsman :
+  (Not Scottish -> RedSocks)             -> -- rule 1
+  (WearKilt    :\/ Not RedSocks)         -> -- rule 2
+  (Married      -> Not GoOutSunday)      -> -- rule 3
+  (Scottish   :<-> GoOutSunday)          -> -- rule 4
+  (WearKilt     -> Scottish :/\ Married) -> -- rule 5
+  (Scottish     -> WearKilt)             -> -- rule 6
+  Void
+
+no_true_scottsman a b c d e f = ?notsure
