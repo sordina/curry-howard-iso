@@ -85,11 +85,11 @@ demorgan_2b f = f . L /\ f . R
 demorgan2 : Not a :/\ Not b :<-> Not (a :\/ b)
 demorgan2 = demorgan_2a <-> demorgan_2b
 
-data Scottish    = VScottish
-data RedSocks    = VRedSocks
-data WearKilt    = VWearKilt
-data Married     = VMarried
-data GoOutSunday = VGoOutSunday
+data Scottish    : Type
+data RedSocks    : Type
+data WearKilt    : Type
+data Married     : Type
+data GoOutSunday : Type
 
 no_true_scottsman :
   (Not Scottish -> RedSocks)             -> -- rule 1
@@ -100,4 +100,38 @@ no_true_scottsman :
   (Scottish     -> WearKilt)             -> -- rule 6
   Void
 
-no_true_scottsman a b c d e f = ?notsure
+no_true_scottsman
+        rule1 rule2 rule3 rule4 rule5 rule6
+        
+        = lemma9 lemma4
+        
+        where
+        
+        lemma1 : Scottish -> Married
+        lemma1 = rhs . rule5 . rule6
+        
+        lemma2 : Scottish -> Not GoOutSunday
+        lemma2 = rule3 . lemma1
+        
+        lemma3 : Scottish -> GoOutSunday
+        lemma3 = forward rule4
+        
+        lemma4 : Not Scottish
+        lemma4 scottish = modus_ponens (lemma3 scottish) (lemma2 scottish)
+        
+        lemma5 : RedSocks
+        lemma5 = rule1 lemma4
+        
+        lemma6 : WearKilt :\/ Void
+        lemma6 = case rule2 of (L wearing_a_kilt) => L wearing_a_kilt
+                               (R not_redsocks)   => R (not_redsocks lemma5)
+        
+        lemma7 : Not (Not WearKilt)
+        lemma7 f = case lemma6 of (L wearingKilt) => f wearingKilt
+                                  (R voidish)     => voidish
+        
+        lemma8 : Not Scottish -> Not WearKilt
+        lemma8 f wearing_a_kilt = f (lhs (rule5 wearing_a_kilt))
+        
+        lemma9 : Not (Not Scottish)
+        lemma9 = lemma7 . lemma8
